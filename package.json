@@ -1,0 +1,22 @@
+{
+  "name": "redux-selector",
+  "version": "0.1.0-SNAPSHOT",
+  "description": "Selector library for Redux written in TypeScript.",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhenwenc/redux-selector.git"
+  },
+  "keywords": [
+    "redux"
+  ],
+  "author": "Zhenwen Cai",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zhenwenc/redux-selector/issues"
+  },
+  "homepage": "https://github.com/zhenwenc/redux-selector#readme"
+}
