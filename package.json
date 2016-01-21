@@ -18,5 +18,16 @@
   "bugs": {
     "url": "https://github.com/zhenwenc/redux-selector/issues"
   },
-  "homepage": "https://github.com/zhenwenc/redux-selector#readme"
+  "homepage": "https://github.com/zhenwenc/redux-selector#readme",
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "gulp": "^3.9.0",
+    "gulp-mocha": "^2.2.0",
+    "gulp-notify": "^2.2.0",
+    "gulp-rimraf": "^0.2.0",
+    "gulp-typescript": "^2.10.0",
+    "gulp-watch": "^4.3.5",
+    "should": "^8.0.1",
+    "yargs": "^3.31.0"
+  }
 }
