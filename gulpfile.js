@@ -21,7 +21,7 @@ gulp.task('build:lib', () => {
       module: 'commonjs',
       removeComments: true,
       preserveConstEnums: true,
-      sourceMap: false,
+      sourceMap: true,
       noExternalResolve: true,
       out: 'index.js'
     }))
@@ -30,11 +30,11 @@ gulp.task('build:lib', () => {
 })
 
 gulp.task('build:test', () => {
-  return gulp.src('test/**/*.ts')
+  return gulp.src(['test/**/*.ts'])
     .pipe(tsc({
       target: 'es6',
       module: 'commonjs',
-      removeComments: true,
+      removeComments: false,
       preserveConstEnums: true,
       sourceMap: false,
       noExternalResolve: true
@@ -49,9 +49,6 @@ gulp.task('test', (done) => {
   return gulp.src('dist/test/**/*.js', { read: false })
     .pipe(mocha({
       reporter: 'spec',
-      globals: {
-        should: require('should')
-      },
       bail: !!args.bail,
     }))
     .on('error', onError)
