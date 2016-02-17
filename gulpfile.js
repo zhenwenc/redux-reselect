@@ -1,6 +1,7 @@
 'use strict'
 
 const gulp    = require('gulp')
+const rename  = require('gulp-rename')
 const rimraf  = require('gulp-rimraf')
 const notify  = require('gulp-notify')
 const tsc     = require('gulp-typescript')
@@ -29,6 +30,12 @@ gulp.task('test', (done) => {
       bail: !!args.bail,
     }))
     .on('error', onError)
+})
+
+gulp.task('package', ['build', 'test'], () => {
+  return gulp.src('dist/src/reselect.js')
+    .pipe(rename('index.js'))
+    .pipe(gulp.dest('lib'))
 })
 
 // ----------------------------------------------------------------------------
