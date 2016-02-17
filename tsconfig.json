@@ -1,13 +1,33 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "declaration": true,
     "module": "commonjs",
+    "rootDir": ".",
+    "sourceMap": true,
+    "sourceRoot": ".",
+    "target": "ES5",
     "outDir": "dist",
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "sourceMap": true
+    "moduleResolution": "classic"
   },
-  "exclude": [
-    "node_modules"
+  "filesGlob": [
+    "src/**/*.ts",
+    "test/**/*.ts",
+    "typings/**/*.d.ts",
+    "node_modules/immutable/dist/immutable.d.ts"
+  ],
+  "atom": {
+    "rewriteTsconfig": true
+  },
+  "files": [
+    "src/reselect.ts",
+    "test/reselect.ts",
+    "typings/assertion-error/assertion-error.d.ts",
+    "typings/chai/chai.d.ts",
+    "typings/lodash/lodash.d.ts",
+    "typings/mocha/mocha.d.ts",
+    "typings/tsd.d.ts",
+    "node_modules/immutable/dist/immutable.d.ts"
   ]
 }

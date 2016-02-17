@@ -9,15 +9,15 @@ import { Iterable, is as immutableEq } from 'immutable'
 // Alias
 const isImmutable = Iterable.isIterable
 
-interface Comparator extends Function {
+export interface Comparator extends Function {
   (a: any, b: any): boolean
 }
 
-interface Selector extends Function {
+export interface Selector extends Function {
   (...args: any[]): any
 }
 
-interface Memoizer extends Function {
+export interface Memoizer extends Function {
   (selector: Selector, comparator: Comparator): Selector
 }
 

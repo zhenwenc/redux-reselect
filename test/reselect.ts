@@ -2,12 +2,13 @@
 
 import { expect } from 'chai'
 import { fromJS } from 'immutable'
+import { memoize as lodashMemoize } from 'lodash'
 import {
   defaultComparator,
   defaultMemoizer,
   createSelector,
   createSelectorBuilder
-} from '../src/index'
+} from '../src/reselect'
 
 const testMemoizer = defaultMemoizer(state => state.x, defaultComparator)
 
@@ -79,13 +80,27 @@ describe('ReduxSelector', () => {
   })
 
   describe('create selector builder', () => {
-    // TODO
     it('should use custom memoizer', () => {
-
+      const createCustomSelector = createSelectorBuilder(lodashMemoize)
+      const selector = createCustomSelector(
+        state => state.x
+      )
+      expect(selector({ x: 'foo' })).to.be.eq('foo')
+      expect(selector({ x: 'bar' })).to.be.eq('bar')
+      expect(selector({ y: 'wow' })).to.be.eq(undefined)
     })
 
     it('should use custom comparator', () => {
-
+      const lengthComparator = (a: any, b: any) => {
+        return a.toString.length === b.toString.length
+      }
+      const createCustomSelector = createSelectorBuilder(defaultMemoizer, lengthComparator)
+      const selector = createCustomSelector(
+        state => state.x,
+        (x: string) => 'Hello ' + x
+      )
+      expect(selector({ x: 'foo' })).to.be.eq('Hello foo')
+      expect(selector({ x: 'bar' })).to.be.eq('Hello foo') // length of `foo` and `bar` is the same
     })
   })
 
@@ -205,20 +220,59 @@ describe('ReduxSelector', () => {
       const selector3 = createSelector(
         selector1,
         selector2,
+        (x, y) => { counter3++; return x + y }
+      )
+      expect(selector3({ x: 2 }, { a: 4 })).to.be.eq(16)
+      expect((counter1, counter2, counter3)).to.be.eq((1, 1, 1))
+      // update neither state, props, or variadic arguments
+      expect(selector3({ x: 2 }, { a: 4 })).to.be.eq(16)
+      expect((counter1, counter2, counter3)).to.be.eq((1, 1, 1))
+      // update unrelated state, props, and variadic arguments
+      expect(selector3({ x: 2, y: 5 }, { a: 4, b: 7 })).to.be.eq(16)
+      expect((counter1, counter2, counter3)).to.be.eq((1, 1, 1))
+      // update only state
+      expect(selector3({ x: 3, y: 5 }, { a: 4, b: 7 })).to.be.eq(18)
+      expect((counter1, counter2, counter3)).to.be.eq((2, 2, 2))
+      // update only props
+      expect(selector3({ x: 3, y: 5 }, { a: 5, b: 7 })).to.be.eq(21)
+      expect((counter1, counter2, counter3)).to.be.eq((2, 3, 3))
+    })
+
+    it('dependency selectors should accept variadic arguments', () => {
+      let counter1 = 0,
+          counter2 = 0,
+          counter3 = 0
+      const selector1 = createSelector(
+        state => state.x,
+        x => { counter1++; return x * 2 }
+      )
+      const selector2 = createSelector(
+        (_, props) => props.a,
+        a => { counter2++; return a * 3 }
+      )
+      const selector3 = createSelector(
+        selector1,
+        selector2,
         (_1, _2, m, n) => m / n,
         (x, a, o) => { counter3++; return x + a + o }
       )
       expect(selector3({ x: 2 }, { a: 4 }, 10, 5)).to.be.eq(18)
       expect((counter1, counter2, counter3)).to.be.eq((1, 1, 1))
       // update neither state, props, or variadic arguments
+      expect(selector3({ x: 2 }, { a: 4 }, 10, 5)).to.be.eq(18)
+      expect((counter1, counter2, counter3)).to.be.eq((1, 1, 1))
       // update unrelated state, props, and variadic arguments
+      expect(selector3({ x: 2, y: 5 }, { a: 4, b: 5 }, 10, 5, 7)).to.be.eq(18)
+      expect((counter1, counter2, counter3)).to.be.eq((1, 1, 1))
       // update only state
+      expect(selector3({ x: 3, y: 5 }, { a: 4, b: 5 }, 10, 5, 7)).to.be.eq(20)
+      expect((counter1, counter2, counter3)).to.be.eq((2, 2, 2))
       // update only props
+      expect(selector3({ x: 3, y: 5 }, { a: 5, b: 5 }, 10, 5, 7)).to.be.eq(23)
+      expect((counter1, counter2, counter3)).to.be.eq((2, 3, 3))
       // upadte only variadic arguments
-    })
-
-    it('dependency selectors should accepts variadic arguments', () => {
-
+      expect(selector3({ x: 3, y: 5 }, { a: 5, b: 5 }, 10, 2, 7)).to.be.eq(26)
+      expect((counter1, counter2, counter3)).to.be.eq((2, 3, 4))
     })
 
     it('should not recompute composite selectors', () => {
@@ -232,14 +286,11 @@ describe('ReduxSelector', () => {
         x => { counter2++; return x * 3 }
       )
       expect(selector2({ x: 10 })).to.be.eq(60)
-      expect(counter1).to.be.eq(1)
-      expect(counter2).to.be.eq(1)
+      expect((counter1, counter2)).to.be.eq((1, 1))
       expect(selector2({ x: 10 })).to.be.eq(60)
-      expect(counter1).to.be.eq(1)
-      expect(counter2).to.be.eq(1)
+      expect((counter1, counter2)).to.be.eq((1, 1))
       expect(selector2({ x: 20 })).to.be.eq(120)
-      expect(counter1).to.be.eq(2)
-      expect(counter2).to.be.eq(2)
+      expect((counter1, counter2)).to.be.eq((2, 2))
     })
   })
 })

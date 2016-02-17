@@ -1,11 +1,12 @@
 'use strict'
 
-const gulp   = require('gulp')
-const rimraf = require('gulp-rimraf')
-const notify = require('gulp-notify')
-const tsc    = require('gulp-typescript')
-const mocha  = require('gulp-mocha')
-const args   = require('yargs').argv
+const gulp    = require('gulp')
+const rimraf  = require('gulp-rimraf')
+const notify  = require('gulp-notify')
+const tsc     = require('gulp-typescript')
+const mocha   = require('gulp-mocha')
+const args    = require('yargs').argv
+const project = tsc.createProject('tsconfig.json')
 
 gulp.task('clean', () => {
   return gulp.src(['dist', 'lib', 'coverage'], { read: false })
@@ -14,36 +15,12 @@ gulp.task('clean', () => {
 
 // ----------------------------------------------------------------------------
 
-gulp.task('build:lib', () => {
-  return gulp.src('src/**/*.ts')
-    .pipe(tsc({
-      target: 'es6',
-      module: 'commonjs',
-      removeComments: true,
-      preserveConstEnums: true,
-      sourceMap: true,
-      noExternalResolve: true,
-      out: 'index.js'
-    }))
+gulp.task('build', ['clean'], () => {
+  return project.src()
+    .pipe(tsc(project))
     .on('error', onError)
-    .pipe(gulp.dest('lib'))
+    .pipe(gulp.dest('dist'))
 })
-
-gulp.task('build:test', () => {
-  return gulp.src(['test/**/*.ts'])
-    .pipe(tsc({
-      target: 'es6',
-      module: 'commonjs',
-      removeComments: false,
-      preserveConstEnums: true,
-      sourceMap: false,
-      noExternalResolve: true
-    }))
-    .on('error', onError)
-    .pipe(gulp.dest('dist/test'))
-})
-
-gulp.task('build', ['clean', 'build:lib'])
 
 gulp.task('test', (done) => {
   return gulp.src('dist/test/**/*.js', { read: false })
