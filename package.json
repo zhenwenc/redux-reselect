@@ -17,7 +17,7 @@
     "redux-reselect"
   ],
   "author": "Zhenwen Cai",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/zhenwenc/redux-reselect/issues"
   },
