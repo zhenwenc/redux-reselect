@@ -6,7 +6,9 @@ const rimraf  = require('gulp-rimraf')
 const notify  = require('gulp-notify')
 const tsc     = require('gulp-typescript')
 const mocha   = require('gulp-mocha')
+const merge   = require('merge2')
 const args    = require('yargs').argv
+
 const project = tsc.createProject('tsconfig.json')
 
 gulp.task('clean', () => {
@@ -17,10 +19,20 @@ gulp.task('clean', () => {
 // ----------------------------------------------------------------------------
 
 gulp.task('build', ['clean'], () => {
-  return project.src()
+  const compiled = project.src()
     .pipe(tsc(project))
     .on('error', onError)
-    .pipe(gulp.dest('dist'))
+
+  return merge([
+    compiled.dts.pipe(gulp.dest('dist')),
+    compiled.js.pipe(gulp.dest('dist')),
+  ])
+})
+
+gulp.task('package', ['build', 'test'], () => {
+  return gulp.src('dist/src/reselect.js')
+    .pipe(rename('index.js'))
+    .pipe(gulp.dest('lib'))
 })
 
 gulp.task('test', (done) => {
@@ -30,12 +42,6 @@ gulp.task('test', (done) => {
       bail: !!args.bail,
     }))
     .on('error', onError)
-})
-
-gulp.task('package', ['build', 'test'], () => {
-  return gulp.src('dist/src/reselect.js')
-    .pipe(rename('index.js'))
-    .pipe(gulp.dest('lib'))
 })
 
 // ----------------------------------------------------------------------------
