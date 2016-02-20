@@ -9,7 +9,7 @@
     "sourceRoot": ".",
     "target": "ES5",
     "outDir": "dist",
-    "moduleResolution": "classic"
+    "moduleResolution": "node"
   },
   "filesGlob": [
     "src/**/*.ts",
