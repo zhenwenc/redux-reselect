@@ -1,6 +1,6 @@
 {
-  "name": "redux-selector",
-  "version": "0.1.0-SNAPSHOT",
+  "name": "redux-reselect",
+  "version": "0.1.0",
   "description": "Selector library for Redux written in TypeScript.",
   "main": "lib/index.js",
   "scripts": {
@@ -8,19 +8,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zhenwenc/redux-selector.git"
+    "url": "git+https://github.com/zhenwenc/redux-reselect.git"
   },
   "keywords": [
     "redux",
     "reselect",
-    "redux-selector"
+    "redux-reselect"
   ],
   "author": "Zhenwen Cai",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/zhenwenc/redux-selector/issues"
+    "url": "https://github.com/zhenwenc/redux-reselect/issues"
   },
-  "homepage": "https://github.com/zhenwenc/redux-selector#readme",
+  "homepage": "https://github.com/zhenwenc/redux-reselect#readme",
   "devDependencies": {
     "chai": "^3.4.1",
     "gulp": "^3.9.0",
