@@ -2,7 +2,8 @@
   "name": "redux-reselect",
   "version": "0.1.0",
   "description": "Selector library for Redux written in TypeScript.",
-  "main": "lib/index.js",
+  "main": "lib/reselect.js",
+  "typings": "./lib/reselect.d.ts",
   "scripts": {
     "test": "gulp test"
   },
@@ -26,7 +27,6 @@
     "gulp": "^3.9.0",
     "gulp-mocha": "^2.2.0",
     "gulp-notify": "^2.2.0",
-    "gulp-rename": "^1.2.2",
     "gulp-rimraf": "^0.2.0",
     "gulp-typescript": "^2.10.0",
     "gulp-watch": "^4.3.5",
